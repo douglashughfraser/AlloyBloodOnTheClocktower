@@ -21,159 +21,6 @@ abstract sig Demon extends Player {
 	one TS: TownSquare | no bluffs & TS.inGame
 }
 
-one sig TownSquare {
-	inGame: set Player,
-	drunkPlayer: lone Player,		// Up to one player can be drunk
-	poisonedPlayer: lone Player 		// Up to one player can be poisoned
-}{
-	all player: Player | player in inGame iff not player.status = NotInPlay
-
-	all player: Player | player in drunkPlayer iff player.status = IsDrunk
-	all player: Player {
-		player in poisonedPlayer iff player.status = IsPoisoned 
-		player in poisonedPlayer iff {
-			// Poisoner must be in the game and have chosen them (on the first night)
-			one poisoner: Poisoner | poisoner in inGame and poisoner.poisoned = player
-		}
-	}
-
-	all player: Player {
-		player in Drunk implies no drunkPlayer and player.status = NotInPlay
-		player in drunkPlayer implies no Drunk
-	}
-
-	no drunkPlayer & Minion & Demon
-
-	// If a character is behaving drunk then the drunk not in play token cannot be in play
-	some drunkPlayer and drunkPlayer not in Librarian implies no Drunk
-
-	// If the drunk is being used as a bluff then it cannot be 
-	no Librarian & drunkPlayer implies some Drunk implies no drunkPlayer
-}
-
-fact setup {
-
-	one TS: TownSquare {
-
-		#TS.inGame >= 5
-
-		// A demon is in the game
-		one demon: Demon | demon in TS.inGame
-
-		// Ignore poisoned players as this is not in the storytellers control
-		// Include if you want to see outcomes of what could happen with a poison on the first night
-		no TS.poisonedPlayer
-
-		#Baron = 0 implies {
-			#TS.inGame = 5 implies {	#(Townsfolk & TS.inGame) = 3
-								#(Outsider & TS.inGame) = 0
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 6 implies {	#(Townsfolk & TS.inGame) = 3
-								#(Outsider & TS.inGame) = 1
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 7 implies {	#(Townsfolk & TS.inGame) = 5
-								#(Outsider & TS.inGame) = 0
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 8 implies {	#(Townsfolk & TS.inGame) = 5
-								#(Outsider & TS.inGame) = 1
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 9 implies {	#(Townsfolk & TS.inGame) = 5
-								#(Outsider & TS.inGame) = 2
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 10 implies {	#(Townsfolk & TS.inGame) = 7
-								#(Outsider & TS.inGame) = 0
-								#(Minion & TS.inGame) = 2
-			}
-			#TS.inGame = 11 implies {	#(Townsfolk & TS.inGame) = 7
-								#(Outsider & TS.inGame) = 1
-								#(Minion & TS.inGame) = 2
-			}
-			#TS.inGame = 12 implies {	#(Townsfolk & TS.inGame) = 7
-								#(Outsider & TS.inGame) = 2
-								#(Minion & TS.inGame) = 2
-			}
-			#TS.inGame = 13 implies {	#(Townsfolk & TS.inGame) = 9
-								#(Outsider & TS.inGame) = 0
-								#(Minion & TS.inGame) = 3
-			}
-			#TS.inGame = 14 implies {	#(Townsfolk & TS.inGame) = 9
-								#(Outsider & TS.inGame) = 1
-								#(Minion & TS.inGame) = 3
-			}
-			#TS.inGame > 14 implies {	#(Townsfolk & TS.inGame) > 8
-								#(Outsider & TS.inGame) > 2
-								#(Minion & TS.inGame) > 2
-			}
-		} else #Baron = 1 implies {
-			#TS.inGame = 5 implies {	#(Outsider & TS.inGame) = 2
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 6 implies {	#(Townsfolk & TS.inGame) = 1
-								#(Outsider & TS.inGame) = 3
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 7 implies {	#(Townsfolk & TS.inGame) = 3
-								#(Outsider & TS.inGame) = 2
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 8 implies {	#(Townsfolk & TS.inGame) = 3
-								#(Outsider & TS.inGame) = 3
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 9 implies {	#(Townsfolk & TS.inGame) = 3
-								#(Outsider & TS.inGame) = 4
-								#(Minion & TS.inGame) = 1
-			}
-			#TS.inGame = 10 implies {	#(Townsfolk & TS.inGame) = 5
-								#(Outsider & TS.inGame) = 2
-								#(Minion & TS.inGame) = 2
-			}	
-			#TS.inGame = 11 implies {	#(Townsfolk & TS.inGame) = 5
-								#(Outsider & TS.inGame) = 3
-								#(Minion & TS.inGame) = 2
-			}
-			#TS.inGame = 12 implies {	#(Townsfolk & TS.inGame) = 5
-								#(Outsider & TS.inGame) = 4
-								#(Minion & TS.inGame) = 2
-			}
-			#TS.inGame = 13 implies {	#(Townsfolk & TS.inGame) = 7
-								#(Outsider & TS.inGame) = 2
-								#(Minion & TS.inGame) = 3
-			}
-			#TS.inGame = 14 implies {	#(Townsfolk & TS.inGame) = 7
-								#(Outsider & TS.inGame) = 3
-								#(Minion & TS.inGame) = 3
-			}
-			#TS.inGame > 14 implies {	#(Townsfolk & TS.inGame) > 8
-								#(Outsider & TS.inGame) = 4
-								#(Minion & TS.inGame) > 2
-			}
-		}
-	}
-}
-
-run show {
-
-
-	one TS: TownSquare {
-		#TS.inGame >= 7
-		//#TS.drunkPlayer = 1
-		some Drunk
-
-		one player: Player | player in Washerwoman and not player.status = NotInPlay
-		one player: Player | player in Investigator and not player.status = NotInPlay and player.minion not in Baron
-		one player: Player | player in Librarian and not player.status = NotInPlay and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
-	}
-
-//	some player: Washerwoman + Investigator + Librarian | player.status = IsDrunk
-
-} for 13 Player
-
 lone sig Washerwoman extends Townsfolk {
 	townsfolk: lone Townsfolk,
 	correct: lone Player,
@@ -314,3 +161,153 @@ lone sig Spy extends Minion {}
 lone sig ScarletWoman extends Minion {}
 lone sig Baron extends Minion {}
 lone sig Imp extends Demon {}
+
+one sig TownSquare {
+	inGame: set Player,
+	drunkPlayer: lone Player,		// Up to one player can be drunk
+	poisonedPlayer: lone Player 		// Up to one player can be poisoned
+}{
+	all player: Player | player in inGame iff not player.status = NotInPlay
+
+	all player: Player | player in drunkPlayer iff player.status = IsDrunk
+	all player: Player {
+		player in poisonedPlayer iff player.status = IsPoisoned 
+		player in poisonedPlayer iff {
+			// Poisoner must be in the game and have chosen them (on the first night)
+			one poisoner: Poisoner | poisoner in inGame and poisoner.poisoned = player
+		}
+	}
+
+	all player: Player {
+		player in Drunk implies no drunkPlayer and player.status = NotInPlay
+		player in drunkPlayer implies no Drunk
+	}
+
+	no drunkPlayer & Minion & Demon
+
+	// If a character is behaving drunk then the drunk not in play token cannot be in play
+	some drunkPlayer and drunkPlayer not in Librarian implies no Drunk
+
+	// If the drunk is being used as a bluff then it cannot be 
+	no Librarian & drunkPlayer implies some Drunk implies no drunkPlayer
+}
+
+fact setup {
+
+	one TS: TownSquare {
+
+		#TS.inGame >= 5
+
+		// A demon is in the game
+		one demon: Demon | demon in TS.inGame
+
+		// Ignore poisoned players as this is not in the storytellers control
+		// Include if you want to see outcomes of what could happen with a poison on the first night
+		no TS.poisonedPlayer
+
+		#Baron = 0 implies {
+			#TS.inGame = 5 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 6 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 7 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 8 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 9 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 10 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 2
+			}
+			#TS.inGame = 11 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 2
+			}
+			#TS.inGame = 12 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 2
+			}
+			#TS.inGame = 13 implies {	#(Townsfolk & TS.inGame) = 9
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 3
+			}
+			#TS.inGame = 14 implies {	#(Townsfolk & TS.inGame) = 9
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 3
+			}
+			#TS.inGame > 14 implies {	#(Townsfolk & TS.inGame) > 8
+								#(Outsider & TS.inGame) > 2
+								#(Minion & TS.inGame) > 2
+			}
+		} else #Baron = 1 implies {
+			#TS.inGame = 5 implies {	#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 6 implies {	#(Townsfolk & TS.inGame) = 1
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 7 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 8 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 9 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 4
+								#(Minion & TS.inGame) = 1
+			}
+			#TS.inGame = 10 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 2
+			}	
+			#TS.inGame = 11 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 2
+			}
+			#TS.inGame = 12 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 4
+								#(Minion & TS.inGame) = 2
+			}
+			#TS.inGame = 13 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 3
+			}
+			#TS.inGame = 14 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 3
+			}
+			#TS.inGame > 14 implies {	#(Townsfolk & TS.inGame) > 8
+								#(Outsider & TS.inGame) = 4
+								#(Minion & TS.inGame) > 2
+			}
+		}
+	}
+}
+
+run show {
+	one TS: TownSquare {
+		#TS.inGame >= 7
+
+		// Someone is probably drunk or is seeing the drunk token
+		some Drunk or #TS.drunkPlayer = 1
+
+		one player: Player | player in Washerwoman and not player.status = NotInPlay
+		one player: Player | player in Investigator and not player.status = NotInPlay and player.minion not in Baron
+		one player: Player | player in Librarian and not player.status = NotInPlay and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
+	}
+
+} for 13 Player

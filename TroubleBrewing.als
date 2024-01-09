@@ -39,17 +39,32 @@ one sig TownSquare {
 		}
 	}
 
-	// If a character is drunk then no drunk token is handed out
-	#drunkPlayer > 0 implies not Drunk in inGame
+	all player: Player {
+		player in Drunk implies no drunkPlayer and player.status = NotInPlay
+		player in drunkPlayer implies no Drunk
+	}
+
+	no drunkPlayer & Minion & Demon
+
+	// If a character is behaving drunk then the drunk not in play token cannot be in play
+	some drunkPlayer and drunkPlayer not in Librarian implies no Drunk
+
+	// If the drunk is being used as a bluff then it cannot be 
+	no Librarian & drunkPlayer implies some Drunk implies no drunkPlayer
 }
 
 fact setup {
 
 	one TS: TownSquare {
+
 		#TS.inGame >= 5
 
 		// A demon is in the game
 		one demon: Demon | demon in TS.inGame
+
+		// Ignore poisoned players as this is not in the storytellers control
+		// Include if you want to see outcomes of what could happen with a poison on the first night
+		no TS.poisonedPlayer
 
 		#Baron = 0 implies {
 			#TS.inGame = 5 implies {	#(Townsfolk & TS.inGame) = 3
@@ -148,17 +163,18 @@ run show {
 
 
 	one TS: TownSquare {
-		#TS.inGame >= 10
-		#(TS.drunkPlayer + TS.poisonedPlayer) > 0
+		#TS.inGame >= 7
+		//#TS.drunkPlayer = 1
+		some Drunk
+
+		one player: Player | player in Washerwoman and not player.status = NotInPlay
+		one player: Player | player in Investigator and not player.status = NotInPlay and player.minion not in Baron
+		one player: Player | player in Librarian and not player.status = NotInPlay and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
 	}
 
-	one player: Player | player in Washerwoman and not player.status = NotInPlay
-	one player: Player | player in Investigator and not player.status = NotInPlay and player.minion not in Baron
-	one player: Player | player in Librarian and not player.status = NotInPlay
+//	some player: Washerwoman + Investigator + Librarian | player.status = IsDrunk
 
-	some player: Washerwoman + Investigator + Librarian | player.status = IsDrunk
-
-} for exactly 16 Player
+} for 13 Player
 
 lone sig Washerwoman extends Townsfolk {
 	townsfolk: lone Townsfolk,
@@ -181,6 +197,9 @@ lone sig Washerwoman extends Townsfolk {
 	status = Sober implies {
 		// Correct ping is actually correct
 		correct in townsfolk + Spy
+
+		// Washerwoman cannot see the drunk
+		one TS:TownSquare | correct not in TS.drunkPlayer
 	}
 
 	// If not in the game (i.e. being used as a bluff), don't assign pings
@@ -192,10 +211,13 @@ lone sig Washerwoman extends Townsfolk {
 }
 
 lone sig Librarian extends Townsfolk {
-	outsider: lone Outsider,
+	outsider: lone Player,
 	correct: lone Player,
 	wrong: lone Player
 }{
+	// Points to an outsider (including not in play drunk) or a drunk character
+	outsider in Outsider or one TS:TownSquare | correct in TS.drunkPlayer
+
 	// Both shown players are playing the game
 	one TS:TownSquare | correct + wrong in TS.inGame
 
@@ -211,7 +233,7 @@ lone sig Librarian extends Townsfolk {
 	// If not drunk or poisoned then the correct ping is actually correct
 	status = Sober implies {
 		// Correct ping is actually correct
-		correct in outsider + Spy
+		correct in outsider + Spy 
 	}
 
 	// If not in the game (i.e. being used as a bluff), don't assign pings
@@ -273,7 +295,13 @@ lone sig Slayer extends Townsfolk {}
 lone sig Soldier extends Townsfolk {}
 lone sig Mayor extends Townsfolk {}
 lone sig Butler extends Outsider {}
-lone sig Drunk extends Outsider {}
+
+lone sig Drunk extends Outsider {}{
+	// If a drunk atom is generated then it is being used as a bluff, therefore it is not in play.
+	// A drunk player is represented as the character they think they are with an "isDrunk" status.
+	status = NotInPlay
+}
+
 lone sig Recluse extends Outsider {}
 lone sig Saint extends Outsider {}
 
@@ -288,5 +316,3 @@ lone sig Spy extends Minion {}
 lone sig ScarletWoman extends Minion {}
 lone sig Baron extends Minion {}
 lone sig Imp extends Demon {}
-
-

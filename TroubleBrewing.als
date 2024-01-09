@@ -7,8 +7,6 @@ enum Status {
 
 some abstract sig Player{
 	status: one Status
-}{
-
 }
 
 abstract sig Townsfolk extends Player {}

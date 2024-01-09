@@ -7,6 +7,8 @@ enum Status {
 
 some abstract sig Player{
 	status: one Status
+}{
+
 }
 
 abstract sig Townsfolk extends Player {}
@@ -50,101 +52,113 @@ fact setup {
 		one demon: Demon | demon in TS.inGame
 
 		#Baron = 0 implies {
-			#TS.inGame = 5 implies {	#Townsfolk = 3
-								#Outsider = 0
-								#Minion = 1
+			#TS.inGame = 5 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 6 implies {	#Townsfolk = 3
-								#Outsider = 1
-								#Minion = 1
+			#TS.inGame = 6 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 7 implies {	#Townsfolk = 5
-								#Outsider = 0
-								#Minion = 1
+			#TS.inGame = 7 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 8 implies {	#Townsfolk = 5
-								#Outsider = 1
-								#Minion = 1
+			#TS.inGame = 8 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 9 implies {	#Townsfolk = 5
-								#Outsider = 2
-								#Minion = 1
+			#TS.inGame = 9 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 10 implies {	#Townsfolk = 7
-								#Outsider = 0
-								#Minion = 2
+			#TS.inGame = 10 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 2
 			}
-			#TS.inGame = 11 implies {	#Townsfolk = 7
-								#Outsider = 1
-								#Minion = 2
+			#TS.inGame = 11 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 2
 			}
-			#TS.inGame = 12 implies {	#Townsfolk = 7
-								#Outsider = 2
-								#Minion = 2
+			#TS.inGame = 12 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 2
 			}
-			#TS.inGame = 13 implies {	#Townsfolk = 9
-							#Outsider = 0
-							#Minion = 3
+			#TS.inGame = 13 implies {	#(Townsfolk & TS.inGame) = 9
+								#(Outsider & TS.inGame) = 0
+								#(Minion & TS.inGame) = 3
 			}
-			#TS.inGame = 14 implies {	#Townsfolk = 9
-								#Outsider = 1
-								#Minion = 3
+			#TS.inGame = 14 implies {	#(Townsfolk & TS.inGame) = 9
+								#(Outsider & TS.inGame) = 1
+								#(Minion & TS.inGame) = 3
 			}
-			#TS.inGame > 14 implies {	#Townsfolk > 8
-								#Outsider > 2
-								#Minion > 2
+			#TS.inGame > 14 implies {	#(Townsfolk & TS.inGame) > 8
+								#(Outsider & TS.inGame) > 2
+								#(Minion & TS.inGame) > 2
 			}
 		} else #Baron = 1 implies {
-			#TS.inGame = 5 implies {	#Outsider = 2
-								#Minion = 1
+			#TS.inGame = 5 implies {	#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 6 implies {	#Townsfolk = 1
-								#Outsider = 3
-								#Minion = 1
+			#TS.inGame = 6 implies {	#(Townsfolk & TS.inGame) = 1
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 7 implies {	#Townsfolk = 3
-								#Outsider = 2
-								#Minion = 1
+			#TS.inGame = 7 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 8 implies {	#Townsfolk = 3
-								#Outsider = 3
-								#Minion = 1
+			#TS.inGame = 8 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 9 implies {	#Townsfolk = 3
-								#Outsider = 4
-								#Minion = 1
+			#TS.inGame = 9 implies {	#(Townsfolk & TS.inGame) = 3
+								#(Outsider & TS.inGame) = 4
+								#(Minion & TS.inGame) = 1
 			}
-			#TS.inGame = 10 implies {	#Townsfolk = 5
-								#Outsider = 2
-								#Minion = 2
+			#TS.inGame = 10 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 2
 			}	
-			#TS.inGame = 11 implies {	#Townsfolk = 5
-								#Outsider = 3
-								#Minion = 2
+			#TS.inGame = 11 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 2
 			}
-			#TS.inGame = 12 implies {	#Townsfolk = 5
-								#Outsider = 4
-								#Minion = 2
+			#TS.inGame = 12 implies {	#(Townsfolk & TS.inGame) = 5
+								#(Outsider & TS.inGame) = 4
+								#(Minion & TS.inGame) = 2
 			}
-			#TS.inGame = 13 implies {	#Townsfolk = 7
-								#Outsider = 2
-								#Minion = 3
+			#TS.inGame = 13 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 2
+								#(Minion & TS.inGame) = 3
 			}
-			#TS.inGame = 14 implies {	#Townsfolk = 7
-								#Outsider = 3
-								#Minion = 3
+			#TS.inGame = 14 implies {	#(Townsfolk & TS.inGame) = 7
+								#(Outsider & TS.inGame) = 3
+								#(Minion & TS.inGame) = 3
 			}
-			#TS.inGame > 14 implies {	#Townsfolk > 8
-								#Outsider = 4
-								#Minion > 2
+			#TS.inGame > 14 implies {	#(Townsfolk & TS.inGame) > 8
+								#(Outsider & TS.inGame) = 4
+								#(Minion & TS.inGame) > 2
 			}
 		}
 	}
 }
 
 run show {
-	one TS: TownSquare | TS.inGame = 12
-} for 16 Player
+
+
+	one TS: TownSquare {
+		#TS.inGame >= 10
+		#(TS.drunkPlayer + TS.poisonedPlayer) > 0
+	}
+
+	one player: Player | player in Washerwoman and not player.status = NotInPlay
+	one player: Player | player in Investigator and not player.status = NotInPlay and player.minion not in Baron
+	one player: Player | player in Librarian and not player.status = NotInPlay
+
+	some player: Washerwoman + Investigator + Librarian | player.status = IsDrunk
+
+} for exactly 16 Player
 
 lone sig Washerwoman extends Townsfolk {
 	townsfolk: lone Townsfolk,
@@ -274,3 +288,5 @@ lone sig Spy extends Minion {}
 lone sig ScarletWoman extends Minion {}
 lone sig Baron extends Minion {}
 lone sig Imp extends Demon {}
+
+

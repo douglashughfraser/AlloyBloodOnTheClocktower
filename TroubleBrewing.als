@@ -183,7 +183,9 @@ one sig TownSquare {
 		player in drunkPlayer implies no Drunk
 	}
 
-	no drunkPlayer & Minion & Demon
+	// Baddies are teetotal
+	no drunkPlayer & Minion 
+	no drunkPlayer & Demon
 
 	// If a character is behaving drunk then the drunk not in play token cannot be in play
 	some drunkPlayer and drunkPlayer not in Librarian implies no Drunk

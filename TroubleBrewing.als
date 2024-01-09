@@ -103,6 +103,9 @@ lone sig Investigator extends Townsfolk {
 	// Avoid the case where showing a correct wrong
 	no wrong & minion
 
+	// Don't give the investigator two evil players
+	not correct + wrong in Minion + Demon
+
 	// The player is not shown themselves at any point
 	this not in minion + correct + wrong
 
@@ -302,7 +305,7 @@ fact setup {
 
 run show {
 	one TS: TownSquare {
-		#TS.inGame >= 8
+		#TS.inGame >= 7
 
 		// Someone is probably drunk or is seeing the drunk token
 		some Drunk or #TS.drunkPlayer = 1
@@ -312,4 +315,4 @@ run show {
 		one player: Player | player in Librarian and not player.status = NotInPlay and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
 	}
 
-} for 12 Player
+} for 14 Player

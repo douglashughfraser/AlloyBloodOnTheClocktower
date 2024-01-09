@@ -302,7 +302,7 @@ fact setup {
 
 run show {
 	one TS: TownSquare {
-		#TS.inGame >= 7
+		#TS.inGame >= 8
 
 		// Someone is probably drunk or is seeing the drunk token
 		some Drunk or #TS.drunkPlayer = 1
@@ -312,4 +312,4 @@ run show {
 		one player: Player | player in Librarian and not player.status = NotInPlay and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
 	}
 
-} for 13 Player
+} for 12 Player

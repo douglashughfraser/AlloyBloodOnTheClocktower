@@ -315,4 +315,4 @@ run show {
 		one player: Player | player in Librarian and not player.status = NotInPlay and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
 	}
 
-} for 14 Player
+} for 13 Player

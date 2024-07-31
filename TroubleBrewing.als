@@ -1,3 +1,5 @@
+// N.B. Recommended: Options >> Decompose Strategy = Batch
+
 enum Status {
 	Sober,
 	IsDrunk,
@@ -61,10 +63,13 @@ lone sig Librarian extends Townsfolk {
 	wrong: lone Player
 }{
 	// Points to an outsider (including not in play drunk) or a drunk character
-	outsider in Outsider or one TS:TownSquare | correct in TS.drunkPlayer
+	
 
 	// Both shown players are playing the game
 	one TS:TownSquare | correct + wrong in TS.inGame
+
+	// Only show outsiders
+	outsider in Outsider
 
 	// Different players are shown
 	no correct & wrong
@@ -77,8 +82,11 @@ lone sig Librarian extends Townsfolk {
 
 	// If not drunk or poisoned then the correct ping is actually correct
 	status = Sober implies {
-		// Correct ping is actually correct
-		correct in outsider + Spy 
+		one TS:TownSquare { 
+			correct in Outsider + Spy + TS.drunkPlayer
+			correct = TS.drunkPlayer implies outsider = Drunk
+			outsider = Drunk implies correct in TS.drunkPlayer + Spy
+		}
 	}
 
 	// If not in the game (i.e. being used as a bluff), don't assign pings
@@ -142,7 +150,9 @@ lone sig Virgin extends Townsfolk {}
 lone sig Slayer extends Townsfolk {}
 lone sig Soldier extends Townsfolk {}
 lone sig Mayor extends Townsfolk {}
-lone sig Butler extends Outsider {}
+lone sig Butler extends Outsider {}{
+	not status = IsDrunk
+}
 
 lone sig Drunk extends Outsider {}{
 	// If a drunk atom is generated then it is being used as a bluff, therefore it is not in play.
@@ -150,8 +160,12 @@ lone sig Drunk extends Outsider {}{
 	status = NotInPlay
 }
 
-lone sig Recluse extends Outsider {}
-lone sig Saint extends Outsider {}
+lone sig Recluse extends Outsider {}{
+	not status = IsDrunk
+}
+lone sig Saint extends Outsider {}{
+	not status = IsDrunk
+}
 
 lone sig Poisoner extends Minion {
 	poisoned: lone Townsfolk + Outsider
@@ -181,20 +195,17 @@ one sig TownSquare {
 		}
 	}
 
-	all player: Player {
-		player in Drunk implies no drunkPlayer and player.status = NotInPlay
-		player in drunkPlayer implies no Drunk
-	}
+	//all player: Player {
+	//	player in Drunk implies no drunkPlayer and player.status = NotInPlay
+		//player in drunkPlayer implies no Drunk
+	//}
 
 	// Baddies are teetotal
 	no drunkPlayer & Minion 
 	no drunkPlayer & Demon
 
 	// If a character is behaving drunk then the drunk not in play token cannot be in play
-	some drunkPlayer and drunkPlayer not in Librarian implies no Drunk
-
-	// If the drunk is being used as a bluff then it cannot be 
-	no Librarian & drunkPlayer implies some Drunk implies no drunkPlayer
+	//some drunkPlayer and drunkPlayer not in Librarian implies no Drunk
 }
 
 fact setup {
@@ -209,7 +220,12 @@ fact setup {
 		// Ignore poisoned players as this is not in the storytellers control
 		// Include if you want to see outcomes of what could happen with a poison on the first night
 		no TS.poisonedPlayer
+	}
+}
 
+pred obey_configurations {
+
+	one TS: TownSquare {
 		#Baron = 0 implies {
 			#TS.inGame = 5 implies {	#(Townsfolk & TS.inGame) = 3
 								#(Outsider & TS.inGame) = 0
@@ -255,7 +271,8 @@ fact setup {
 								#(Outsider & TS.inGame) > 2
 								#(Minion & TS.inGame) > 2
 			}
-		} else #Baron = 1 implies {
+		}
+		#Baron = 1 implies {
 			#TS.inGame = 5 implies {	#(Outsider & TS.inGame) = 2
 								#(Minion & TS.inGame) = 1
 			}
@@ -307,12 +324,16 @@ run show {
 	one TS: TownSquare {
 		#TS.inGame >= 7
 
-		// Someone is probably drunk or is seeing the drunk token
-		some Drunk or #TS.drunkPlayer = 1
+		obey_configurations[]
 
-		one player: Player | player in Washerwoman and not player.status = NotInPlay
-		one player: Player | player in Investigator and not player.status = NotInPlay and player.minion not in Baron
-		one player: Player | player in Librarian and not player.status = NotInPlay and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
+		no Baron & TS.inGame
+
+		// Someone is probably drunk or is seeing the drunk token
+		//some Drunk or #TS.drunkPlayer = 1
+
+		//one player: Player | player in Washerwoman and not player.status = NotInPlay
+		one player: Player | player in Investigator and not player.status = NotInPlay //and player.minion not in Baron
+		one player: Player | player in Librarian and not player.status = NotInPlay //and (player.outsider in Drunk or player.outsider in TS.drunkPlayer)
 	}
 
 } for 13 Player

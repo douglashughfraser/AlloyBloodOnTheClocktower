@@ -1,0 +1,109 @@
+some abstract sig Character {}
+
+one abstract sig Demon extends Character {}
+lone sig Vortox extends Demon {}
+lone sig Vigormortis extends Demon {}
+lone sig NoDashi extends Demon {}
+lone sig FangGu extends Demon {}
+
+some abstract sig Minion extends Character {}
+lone sig Witch extends Minion {}
+lone sig EvilTwin extends Minion {}
+lone sig PitHag extends Minion {}
+lone sig Cerenovous extends Minion {}
+
+some abstract sig Outsider extends Character {}
+lone sig Mutant extends Outsider {}
+lone sig Sweetheart extends Outsider {}
+lone sig Klutz extends Outsider {}
+lone sig Barber extends Outsider {}
+
+some abstract sig Townsfolk extends Character {}
+lone sig Clockmaker extends Townsfolk {}
+lone sig Savant extends Townsfolk {}
+lone sig Mathematician extends Townsfolk {}
+lone sig SnakeCharmer extends Townsfolk {}
+lone sig Oracle extends Townsfolk {}
+lone sig Sage extends Townsfolk {}
+lone sig Philosopher extends Townsfolk {}
+lone sig Artist extends Townsfolk {}
+lone sig Juggler extends Townsfolk {}
+lone sig Seamstress extends Townsfolk {}
+lone sig Flowergirl extends Townsfolk {}
+lone sig TownCrier extends Townsfolk {}
+lone sig Dreamer extends Townsfolk {}
+
+fact TownSquare {
+
+    one Demon
+
+    // ---------------- Fang Gu ----------------
+
+    #FangGu = 1 implies {
+
+        #Character = 7  implies { #Outsider = 1 and #Townsfolk = 4 and #Minion = 1 }
+        #Character = 8  implies { #Outsider = 2 and #Townsfolk = 4 and #Minion = 1 }
+        #Character = 9  implies { #Outsider = 3 and #Townsfolk = 4 and #Minion = 1 }
+
+        #Character = 10 implies { #Outsider = 1 and #Townsfolk = 6 and #Minion = 2 }
+        #Character = 11 implies { #Outsider = 2 and #Townsfolk = 6 and #Minion = 2 }
+        #Character = 12 implies { #Outsider = 3 and #Townsfolk = 6 and #Minion = 2 }
+
+        #Character = 13 implies { #Outsider = 1 and #Townsfolk = 8 and #Minion = 3 }
+        #Character = 14 implies { #Outsider = 2 and #Townsfolk = 8 and #Minion = 3 }
+        #Character = 15 implies { #Outsider = 3 and #Townsfolk = 8 and #Minion = 3 }
+    }
+
+    // ---------------- Vigormortis ----------------
+
+    #Vigormortis = 1 implies {
+
+        #Character = 7  implies { #Outsider = 0 and #Townsfolk = 6 and #Minion = 1 }
+        #Character = 8  implies { #Outsider = 0 and #Townsfolk = 6 and #Minion = 1 }
+        #Character = 9  implies { #Outsider = 1 and #Townsfolk = 6 and #Minion = 1 }
+
+        #Character = 10 implies { #Outsider = 0 and #Townsfolk = 8 and #Minion = 2 }
+        #Character = 11 implies { #Outsider = 0 and #Townsfolk = 8 and #Minion = 2 }
+        #Character = 12 implies { #Outsider = 1 and #Townsfolk = 8 and #Minion = 2 }
+
+        #Character = 13 implies { #Outsider = 0 and #Townsfolk = 10 and #Minion = 3 }
+        #Character = 14 implies { #Outsider = 0 and #Townsfolk = 10 and #Minion = 3 }
+        #Character = 15 implies { #Outsider = 1 and #Townsfolk = 10 and #Minion = 3 }
+    }
+
+    // ---------------- Vortox ----------------
+
+    #Vortox = 1 implies {
+
+        #Character = 7  implies { #Outsider = 0 and #Townsfolk = 5 and #Minion = 1 }
+        #Character = 8  implies { #Outsider = 1 and #Townsfolk = 5 and #Minion = 1 }
+        #Character = 9  implies { #Outsider = 2 and #Townsfolk = 5 and #Minion = 1 }
+
+        #Character = 10 implies { #Outsider = 0 and #Townsfolk = 7 and #Minion = 2 }
+        #Character = 11 implies { #Outsider = 1 and #Townsfolk = 7 and #Minion = 2 }
+        #Character = 12 implies { #Outsider = 2 and #Townsfolk = 7 and #Minion = 2 }
+
+        #Character = 13 implies { #Outsider = 0 and #Townsfolk = 9 and #Minion = 3 }
+        #Character = 14 implies { #Outsider = 1 and #Townsfolk = 9 and #Minion = 3 }
+        #Character = 15 implies { #Outsider = 2 and #Townsfolk = 9 and #Minion = 3 }
+    }
+
+    // ---------------- No Dashii ----------------
+
+    #NoDashi = 1 implies {
+
+        #Character = 7  implies { #Outsider = 0 and #Townsfolk = 5 and #Minion = 1 }
+        #Character = 8  implies { #Outsider = 1 and #Townsfolk = 5 and #Minion = 1 }
+        #Character = 9  implies { #Outsider = 2 and #Townsfolk = 5 and #Minion = 1 }
+
+        #Character = 10 implies { #Outsider = 0 and #Townsfolk = 7 and #Minion = 2 }
+        #Character = 11 implies { #Outsider = 1 and #Townsfolk = 7 and #Minion = 2 }
+        #Character = 12 implies { #Outsider = 2 and #Townsfolk = 7 and #Minion = 2 }
+
+        #Character = 13 implies { #Outsider = 0 and #Townsfolk = 9 and #Minion = 3 }
+        #Character = 14 implies { #Outsider = 1 and #Townsfolk = 9 and #Minion = 3 }
+        #Character = 15 implies { #Outsider = 2 and #Townsfolk = 9 and #Minion = 3 }
+    }
+}
+
+run show {} for exactly 14 Character
